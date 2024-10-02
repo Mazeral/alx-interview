@@ -31,4 +31,4 @@ def pascal_triangle(n):
                     pascal_row.append(pascal[i-1][j-1] + pascal[i-1][j])
                 j += 1
             pascal.append(pascal_row)
-        return pascal
+    return pascal
