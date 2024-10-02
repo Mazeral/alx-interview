@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python2
 """
 A function that generates Pascal's Triangle.
 
@@ -20,21 +20,6 @@ Returns:
 import math
 
 
-def calc_pasc_pos(i, j):
-    """
-    Calculate the value at position (i, j) in Pascal's
-    Triangle using the binomial coefficient.
-
-    Parameters:
-        i (int): The row index of Pascal's Triangle.
-        j (int): The column index in the given row.
-
-    Returns:
-        int: The value at position (i, j) in Pascal's Triangle.
-    """
-    return math.factorial(i) // (math.factorial(j) * math.factorial(i - j))
-
-
 def pascal_triangle(n):
     """
     Generate Pascal's Triangle with 'n' rows.
@@ -47,15 +32,23 @@ def pascal_triangle(n):
               Each inner list contains the numbers of that row.
     """
     if n <= 0:
-        return []  # If 'n' is zero or negative, return an empty list
+        return []
     else:
-        pascal = []  # Initialize an empty list to store the rows
-        # of Pascal's Triangle
+        pascal = []  
         for i in range(n):
-            pascal_array = []  # Initialize the current row
-            for j in range(i + 1):
-                # Calculate the binomial coefficient using factorial
-                pascal_array.append(calc_pasc_pos(i, j))
-            pascal.append(pascal_array)  # Add the current row
-            # to Pascal's Triangle
-        return pascal  # Return the completed Pascal's Triangle
+            if i == 0:
+                pascal.append([1])
+            else:
+                pascal_row = []
+                for j in range(i):
+                    print("i is: {}\t j is: {}".format(i,j))
+                    if j == 0 or j == i-1:
+                        pascal_row.append(1)
+                    else:
+                        new_num = pascal[i-1][j-1] + pascal[i-1][j]
+                        print("The new number is:{}".format(new_num))
+                        pascal_row.append(pascal[i-1][j-1] + pascal[i-1][j])
+                    print("Pascal row:{}".format(pascal_row))
+                pascal.append(pascal_row)
+            print("Pascal Triangle:{}".format(pascal))
+        return pascal
