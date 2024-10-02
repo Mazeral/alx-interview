@@ -34,7 +34,7 @@ def pascal_triangle(n):
     if n <= 0:
         return []
     else:
-        pascal = []  
+        pascal = []
         for i in range(n):
             pascal_row = []
             for j in range(0, i+1):
