@@ -1,20 +1,6 @@
 #!/usr/bin/python3
 """
-A function that generates Pascal's Triangle.
-
-Pascal's Triangle is a triangular array where each number is the sum of the
-two directly above it. This function generates the first 'n' rows of Pascal's
-Triangle.
-
-Each row corresponds to the binomial coefficients of the expansion of
-(a + b)^n.
-
-Args:
-    n (int): The number of rows of Pascal's Triangle to generate.
-
-Returns:
-    list: A list of lists, where each inner list represents a row of Pascal's
-    Triangle.
+0-pascal_triangle
 """
 
 import math
