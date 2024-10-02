@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 """
 A function that generates Pascal's Triangle.
 
@@ -36,19 +36,12 @@ def pascal_triangle(n):
     else:
         pascal = []  
         for i in range(n):
-            if i == 0:
-                pascal.append([1])
-            else:
-                pascal_row = []
-                for j in range(i):
-                    print("i is: {}\t j is: {}".format(i,j))
-                    if j == 0 or j == i-1:
-                        pascal_row.append(1)
-                    else:
-                        new_num = pascal[i-1][j-1] + pascal[i-1][j]
-                        print("The new number is:{}".format(new_num))
-                        pascal_row.append(pascal[i-1][j-1] + pascal[i-1][j])
-                    print("Pascal row:{}".format(pascal_row))
-                pascal.append(pascal_row)
-            print("Pascal Triangle:{}".format(pascal))
+            pascal_row = []
+            for j in range(0, i+1):
+                if j == 0 or j == i:
+                    pascal_row.append(1)
+                else:
+                    new_num = pascal[i-1][j-1] + pascal[i-1][j]
+                    pascal_row.append(pascal[i-1][j-1] + pascal[i-1][j])
+            pascal.append(pascal_row)
         return pascal
