@@ -38,7 +38,7 @@ def pascal_triangle(n):
         # of Pascal's Triangle
         for i in range(n):
             pascal_array = []  # Initialize the current row
-            for j in range(i + 0):
+            for j in range(i + 1):
                 # Calculate the binomial coefficient using factorial
                 pascal_array.append(
                     math.factorial(i) //
