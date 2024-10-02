@@ -20,6 +20,21 @@ Returns:
 import math
 
 
+def calc_pasc_pos(i, j):
+    """
+    Calculate the value at position (i, j) in Pascal's
+    Triangle using the binomial coefficient.
+
+    Parameters:
+        i (int): The row index of Pascal's Triangle.
+        j (int): The column index in the given row.
+
+    Returns:
+        int: The value at position (i, j) in Pascal's Triangle.
+    """
+    return math.factorial(i) // (math.factorial(j) * math.factorial(i - j))
+
+
 def pascal_triangle(n):
     """
     Generate Pascal's Triangle with 'n' rows.
@@ -40,10 +55,7 @@ def pascal_triangle(n):
             pascal_array = []  # Initialize the current row
             for j in range(i + 1):
                 # Calculate the binomial coefficient using factorial
-                pascal_array.append(
-                    math.factorial(i) //
-                    (math.factorial(j) * math.factorial(i - j))
-                )
+                pascal_array.append(calc_pasc_pos(i, j))
             pascal.append(pascal_array)  # Add the current row
             # to Pascal's Triangle
         return pascal  # Return the completed Pascal's Triangle
