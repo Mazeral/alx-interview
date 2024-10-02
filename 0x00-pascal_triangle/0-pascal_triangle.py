@@ -37,11 +37,12 @@ def pascal_triangle(n):
         pascal = []
         for i in range(n):
             pascal_row = []
-            for j in range(0, i+1):
+            j = 0
+            while j <= i:
                 if j == 0 or j == i:
                     pascal_row.append(1)
                 else:
-                    new_num = pascal[i-1][j-1] + pascal[i-1][j]
                     pascal_row.append(pascal[i-1][j-1] + pascal[i-1][j])
+                j += 1
             pascal.append(pascal_row)
         return pascal
