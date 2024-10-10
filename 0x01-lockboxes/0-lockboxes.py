@@ -1,37 +1,41 @@
 #!/usr/bin/python3
+"""
+0-lockboxes
+"""
+
 
 def canUnlockAll(boxes):
     """
     Determines if all boxes can be opened.
 
     Args:
-        boxes (list): A list of lists, where each inner list represents
-        a box and contains the keys that can be found in that box.
+        boxes (list): A list of lists where each inner list contains keys
+        to other boxes.
 
     Returns:
         bool: True if all boxes can be opened, False otherwise.
     """
-    n = len(boxes)  # Get the number of boxes
-    opened = [False] * n  # Initialize a list to keep track of opened boxes
-    opened[0] = True  # The first box is already open
-    keys = boxes[0]  # Get the keys in the first box
+    # Initialize a set to keep track of visited boxes
+    visited = set()
+    # Initialize a queue with the first box
+    queue = [0]
+    # Add the first box to the visited set
+    visited.add(0)
 
-    while keys:
-        """
-        Loop until all keys have been found.
-        """
-        new_keys = []  # Initialize a list to store new keys
-        for key in keys:
-            """
-            Iterate over the keys found so far.
-            """
-            if not opened[key]:
-                """
-                If the box corresponding to the key has not been opened yet.
-                """
-                new_keys.extend(boxes[key])  # Add the keys in the box to the
-                # new_keys list
-                opened[key] = True  # Mark the box as opened
-        keys = new_keys  # Update the keys list with the new keys
-    # Return True if all boxes have been opened, False otherwise
-    return all(opened)
+    # Continue the BFS traversal until the queue is empty
+    while queue:
+        # Dequeue the next box
+        box = queue.pop(0)
+        # Iterate over the keys in the current box
+        for key in boxes[box]:
+            # If the key has not been visited before
+            if key not in visited:
+                # Add the key to the visited set
+                visited.add(key)
+                # If the key is within the bounds of the boxes list
+                if key < len(boxes):
+                    # Add the key to the queue
+                    queue.append(key)
+
+    # Return True if all boxes have been visited, False otherwise
+    return len(visited) == len(boxes)
