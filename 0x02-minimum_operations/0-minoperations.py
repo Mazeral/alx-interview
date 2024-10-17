@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-
+"""
+A code for solving the minOperations task
+"""
 
 def minOperations(n: int) -> int:
     """
