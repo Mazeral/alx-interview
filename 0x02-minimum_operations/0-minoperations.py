@@ -3,9 +3,11 @@
 A code for solving the minOperations task
 """
 
+
 def minOperations(n: int) -> int:
     """
-    Calculate the minimum number of operations needed to result in exactly n H characters.
+    Calculate the minimum number of operations needed to result in exactly
+    n H characters.
 
     Args:
         n (int): The target number of H characters.
