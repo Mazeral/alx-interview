@@ -12,6 +12,7 @@ import re
 import signal
 from collections import defaultdict
 
+
 def signal_handler(sig, frame):
     """
     Signal handler for SIGINT (CTRL + C).
@@ -20,6 +21,7 @@ def signal_handler(sig, frame):
     """
     print_stats()
     sys.exit(0)
+
 
 # Register signal handler for SIGINT
 signal.signal(signal.SIGINT, signal_handler)
@@ -36,6 +38,7 @@ pattern = re.compile(
     r"(\d{3}) (\d+)$"  # Status code and file size
 )
 
+
 def process_stdin():
     """
     Reads from stdin line by line, processing each log entry.
@@ -44,6 +47,7 @@ def process_stdin():
     for line in sys.stdin:
         line_count += 1
         process_log_line(line)
+
 
 def process_log_line(line):
     """
@@ -66,6 +70,7 @@ def process_log_line(line):
     if line_count % 10 == 0:
         print_stats()
 
+
 def print_stats():
     """
     Prints the collected statistics.
@@ -76,6 +81,7 @@ def print_stats():
     for status_code in sorted(status_code_counts):
         if status_code in [200, 301, 400, 401, 403, 404, 405, 500]:
             print(f"{status_code}: {status_code_counts[status_code]}")
+
 
 if __name__ == "__main__":
     process_stdin()
