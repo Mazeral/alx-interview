@@ -4,42 +4,55 @@ Module of log parsing
 """
 import sys
 import re
+import signal
+from collections import defaultdict
+
+
+# Define the signal handler for CTRL + C
+def signal_handler(sig, frame):
+    print_stats()
+    sys.exit(0)
+
+
+# Register the signal handler
+signal.signal(signal.SIGINT, signal_handler)
 
 # Initialize metrics
-total_size = 0
-status_codes = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
-count = 0
+total_file_size = 0
+status_code_counts = defaultdict(int)
+line_count = 0
 
-log_format = r'^\S+ - \[\S+\] "GET /projects/260 HTTP/1.1" (\d{3}) (\d+)$'
+# Regular expression pattern to match the input format
+pattern = re.compile
+(r"^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\
+        - \[(.*?)\] \"GET /projects/260 HTTP/1.1\" (\d{3}) (\d+)$")
+
+# Read from stdin line by line
+for line in sys.stdin:
+    line_count += 1
+
+    # Try to match the input format
+    match = pattern.match(line)
+    if match:
+        # Extract relevant data
+        _, _, status_code, file_size = match.groups()
+        status_code, file_size = int(status_code), int(file_size)
+
+        # Update metrics
+        total_file_size += file_size
+        status_code_counts[status_code] += 1
+
+    # Print statistics every 10 lines or upon signal
+    if line_count % 10 == 0:
+        print_stats()
+
+# Print final statistics (if not exited by signal)
+print_stats()
 
 
-def print_metrics(total_size, status_codes):
-    print(f"File size: {total_size}")
-    for code in sorted(status_codes.keys()):
-        if status_codes[code] > 0:
-            print(f"{code}: {status_codes[code]}")
-
-
-try:
-    for line in sys.stdin:
-        match = re.match(log_format, line)
-        if match:
-            # Extract status code and file size
-            status_code = int(match.group(1))
-            file_size = int(match.group(2))
-
-            # Update total file size and status code count
-            total_size += file_size
-            if status_code in status_codes:
-                status_codes[status_code] += 1
-
-            count += 1
-
-            # Print metrics every 10 lines
-            if count % 10 == 0:
-                print_metrics(total_size, status_codes)
-
-except KeyboardInterrupt:
-    # Print final statistics when interrupted
-    print_metrics(total_size, status_codes)
-    raise
+# Define a function to print the collected statistics
+def print_stats():
+    print(f"File size: {total_file_size}")
+    for status_code in sorted(status_code_counts):
+        if status_code in [200, 301, 400, 401, 403, 404, 405, 500]:
+            print(f"{status_code}: {status_code_counts[status_code]}")
