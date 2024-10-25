@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+"""
+Module of log parsing
+"""
 import sys
 import re
 
