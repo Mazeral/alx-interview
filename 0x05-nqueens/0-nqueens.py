@@ -17,43 +17,37 @@ queens = {}
 
 def diag_safe(queen_dict, curr_key):
     """Check if all pieces are safe diagnally
+    returns True if safe, False otherwise
     """
     # Check if there's an attack from any queen to any queen:
     for key, value in queen_dict.items():
-        if key != curr_key and curr_key < int(sys.argv[1]):
+        if key != curr_key:
             x_diff = abs(queen_dict[curr_key][0] - queen_dict[key][0])
             y_diff = abs(queen_dict[curr_key][1] - queen_dict[key][1])
             if x_diff == y_diff:
-                if queen_dict[curr_key][0] < int(sys.argv[1]):
-                    queen_dict[curr_key][0] += 1
                     return False
-            elif queen_dict[curr_key][1] < int(sys.argv[1]):
-                    queen_dict[curr_key][1] += 1
-                    return False
-            else:
-                return False
     return True
 
 
 
 def row_safe(queen_dict, curr_key):
-    # wont work!
-    if queen_dict[curr_key][0] == queen_dict[key][0]:
-        queen_dict[curr_key][1] += 1
-        return False
-    if queen_dict[curr_key][1] == queen_dict[curr_key][1] % int(sys.argv[1]): 
-        return False
-    return col_safe(queen_dict, key, int(sys.argv[1]) + 1)
+    """Check if all pieces are safe horizontally
+    returns True if safe, False otherwise
+    """
+    for key, value in queen_dict.items():
+        if queen_dict[curr_key][0] == queen_dict[key][0]:
+            return False
+    return True
 
 
 def col_safe(queen_dict, key):
-    # wont work!
-    if queen_dict[curr_key][1] == queen_dict[key][1]:
-        queen_dict[curr_key][0] += 1
-        return True
-    if queen_dict[curr_key][0] == queen_dict[curr_key][0] % int(sys.argv[1]): 
-        return False
-    return col_safe(queen_dict, key, int(sys.argv[1]) + 1)
+    """Check if all pieces are safe vertically
+    returns True if safe, False otherwise
+    """
+    for key, valye in queen_dict.items():
+        if queen_dict[curr_key][1] == queen_dict[key][1] and curr_key != key:
+            return False
+    return True
 
 
 def recursive_method(key):
