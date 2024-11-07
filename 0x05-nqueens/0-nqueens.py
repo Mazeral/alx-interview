@@ -1,86 +1,140 @@
 #!/usr/bin/python3
 """
-Modue for the nqueens problem
+Module for solving the N-Queens problem using backtracking.
+
+The N-Queens problem is the task of placing N queens on an N×N chessboard
+such that no two queens attack each other. This module provides a solution
+using recursion and backtracking.
 """
 
 import sys
+from typing import Dict, List, Tuple
+
+# Global variables to store the queens' positions and found solutions.
+queens: Dict[int, List[int]] = {}
+solutions: List[List[List[int]]] = []
 
 
-# Creating an attack checkers, they receive an arrat containing
-# the coordination for each piece, List[Tuple]
-
-# make these functions return False if there's an attacking queen
-# Returns true in not attacking
-
-
-queens = {}
-
-def diag_safe(queen_dict, curr_key):
-    """Check if all pieces are safe diagnally
-    returns True if safe, False otherwise
+def diag_safe(curr_key: int) -> bool:
     """
-    # Check if there's an attack from any queen to any queen:
-    for key, value in queen_dict.items():
+    Check if the queen at the current key is safe diagonally.
+
+    Args:
+        curr_key (int): The key representing the current queen's position.
+
+    Returns:
+        bool: True if the queen is safe diagonally, False otherwise.
+    """
+    for key, value in queens.items():
         if key != curr_key:
-            x_diff = abs(queen_dict[curr_key][0] - queen_dict[key][0])
-            y_diff = abs(queen_dict[curr_key][1] - queen_dict[key][1])
+            x_diff = abs(queens[curr_key][0] - queens[key][0])
+            y_diff = abs(queens[curr_key][1] - queens[key][1])
             if x_diff == y_diff:
-                    return False
+                return False
     return True
 
 
-
-def row_safe(queen_dict, curr_key):
-    """Check if all pieces are safe horizontally
-    returns True if safe, False otherwise
+def row_safe(curr_key: int) -> bool:
     """
-    for key, value in queen_dict.items():
-        if queen_dict[curr_key][0] == queen_dict[key][0]:
+    Check if the queen at the current key is safe horizontally.
+
+    Args:
+        curr_key (int): The key representing the current queen's position.
+
+    Returns:
+        bool: True if the queen is safe horizontally, False otherwise.
+    """
+    for key, value in queens.items():
+        if queens[curr_key][0] == queens[key][0] and curr_key != key:
             return False
     return True
 
 
-def col_safe(queen_dict, key):
-    """Check if all pieces are safe vertically
-    returns True if safe, False otherwise
+def col_safe(curr_key: int) -> bool:
     """
-    for key, valye in queen_dict.items():
-        if queen_dict[curr_key][1] == queen_dict[key][1] and curr_key != key:
+    Check if the queen at the current key is safe vertically.
+
+    Args:
+        curr_key (int): The key representing the current queen's position.
+
+    Returns:
+        bool: True if the queen is safe vertically, False otherwise.
+    """
+    for key, value in queens.items():
+        if queens[curr_key][1] == queens[key][1] and curr_key != key:
             return False
     return True
 
 
-def recursive_method(key):
-    # Can work!
-    if diag_safe(queens, key) and row_safe(queens, key) and col_safe(queens, key) and key < 4:
-        result = [value for _, value in queens.items()]
-        print(result)
-    if (key + 1) < 4:
-        return recursive_method(key + 1)
+def queen_safe(key: int) -> bool:
+    """
+    Check if the queen at the given key is safe from attacks.
+
+    Args:
+        key (int): The key representing the current queen's position.
+
+    Returns:
+        bool: True if the queen is safe, False otherwise.
+    """
+    return col_safe(key) and row_safe(key) and diag_safe(key)
 
 
-def nqueens():
-    """How many ways are possible to place N queens such that
-    No queen is attacking another?
+def recursive_sol(key: int) -> None:
+    """
+    Recursive backtracking function to place queens on the board.
 
-    We will get all the solutions, count them and print them
+    Args:
+        key (int): The current row key to place a queen.
+    """
+    n = int(sys.argv[1])
+
+    # Base case: all queens are placed
+    if key == n:
+        solution = [x for x in queens.values()]
+        solutions.append(solution)
+        return
+
+    # Try placing the queen in each column of the current row
+    for col in range(n):
+        queens[key] = [key, col]
+        if queen_safe(key):
+            recursive_sol(key + 1)
+
+    # Reset the queen's position for backtracking
+    queens[key] = [-1, -1]
+
+
+def nqueens() -> None:
+    """
+    Main function to solve the N-Queens problem.
+    It parses the input, initializes the queens' positions, and prints all
+    solutions.
     """
     if len(sys.argv) != 2:
         print("Usage: nqueens N")
         sys.exit(1)
-    n = sys.argv[1]
+
     try:
         n = int(sys.argv[1])
     except ValueError:
         print("N must be a number")
         sys.exit(1)
+
     if n < 4:
         print("N must be at least 4")
         sys.exit(1)
-    for i in range(int(sys.argv[1])):
-        queens[i] = [i,i]
 
-    recursive_method(0)
+    # Initialize queens' positions
+    for x in range(n):
+        queens[x] = [-1, -1]
+
+    # Start the recursive backtracking
+    recursive_sol(0)
+
+    # Print each solution
+    for sol in solutions:
+        print(sol)
+
 
 if __name__ == "__main__":
     nqueens()
