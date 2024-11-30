@@ -2,6 +2,7 @@
 """makeChange module
 """
 
+
 def makeChange(coins, total):
     """Make change function
     """
@@ -15,7 +16,7 @@ def makeChange(coins, total):
             dp[i] = float('inf')
     # dp[x] = min(dp[x], dp[x-coin] + 1)
     for c in coins:
-       for x in range(coin, total + 1):
+        for x in range(coin, total + 1):
             dp[x] = min(dp[x], dp[x - coin] + 1)
 
     return dp[total] if dp[total] != float('inf') else -1
