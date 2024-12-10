@@ -68,21 +68,25 @@ def isWinner(x, nums):
         prime_number = SieveOfEratosthenes(num)
         # Create a dictionary that maps every number to its multiples
 
-        def create_multiples_dict(n, max_multiple):
+        def create_multiples_dict(n, max_multiple, exclude_list):
             """
-            Create a dictionary that maps every number to its multiples.
+            Create a dictionary that maps every number to its multiples,
+            excluding certain numbers.
 
             Args:
                 n (int): The upper limit for generating multiples.
                 max_multiple (int): The maximum multiple to generate.
+                exclude_list (list): A list of numbers to exclude from the
+                multiples.
 
             Returns:
                 dict: A dictionary where each key is a number and its value
                 is a list of multiples.
             """
-            return {i: [j for j in range(i, max_multiple + 1, i)]
+            return {i: [j for j in range(i, max_multiple + 1, i) if
+                        j not in exclude_list]
                     for i in range(2, n + 1)}
-        multiples = create_multiples_dict(num, num)
+        multiples = create_multiples_dict(num, num, prime_number)
         # For each pick, filter the numbers array based on the multiples
         # dictionary If there's a number that is a prime number, continue,
         # else print the result
