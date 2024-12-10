@@ -57,7 +57,7 @@ def isWinner(x, nums):
         nums (list): A list of numbers.
 
     Returns:
-        str: The winner of the game, either "Ben" or "Maria".
+        str: The winner of the game, "Ben" ,"Maria" or None.
     """
     player = False
     Ben = 0
@@ -107,7 +107,7 @@ def isWinner(x, nums):
             Maria += 1
     if Ben > Maria:
         return "Ben"
-    else if Maria > Ben:
+    elif Maria > Ben:
         return "Maria"
     else:
         return None
