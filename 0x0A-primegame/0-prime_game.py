@@ -5,47 +5,26 @@
 
 def SieveOfEratosthenes(n):
     """
-    Implementation of the Sieve of Eratosthenes algorithm to find all
-    prime numbers up to n.
+    Find all prime numbers up to n using the Sieve of Eratosthenes.
 
     Args:
         n (int): The upper limit for finding prime numbers.
 
     Returns:
-        list: A boolean array where prime[i] is True if i is a prime number,
-        False otherwise.
+        list: A list of prime numbers up to n.
     """
-    # Create a boolean array "prime[0..n]" and initialize all entries as true.
-    # A value in prime[i] will finally be false if i is Not a prime, else true.
-    prime = [True for i in range(n+1)]
-    p = 2
-    while (p * p <= n):
-        # If prime[p] is not changed, then it is a prime
-        if (prime[p] is True):
-            # Update all multiples of p
-            for i in range(p * p, n+1, p):
+    if n < 2:
+        return []
+
+    prime = [True] * (n + 1)
+    prime[0] = prime[1] = False
+
+    for p in range(2, int(n ** 0.5) + 1):
+        if prime[p]:
+            for i in range(p * p, n + 1, p):
                 prime[i] = False
-        p += 1
-    return prime
 
-
-def multiples_of_n(n, start=0, stop=None):
-    """
-    Generate a range of multiples of n.
-
-    Args:
-        n (int): The number for which to generate multiples.
-        start (int, optional): The starting value of the range.
-        Defaults to 0.
-        stop (int, optional): The stopping value of the range.
-        Defaults to n * 10.
-
-    Returns:
-        range: A range of multiples of n.
-    """
-    if stop is None:
-        stop = n * 10  # default stop value
-    return range(start, stop, n)
+    return [p for p in range(2, n + 1) if prime[p]]
 
 
 def isWinner(x, nums):
@@ -53,65 +32,46 @@ def isWinner(x, nums):
     Determine the winner of the prime game.
 
     Args:
-        x (int): The input value.
-        nums (list): A list of numbers.
+        x (int): The number of rounds.
+        nums (list): A list of integers representing the upper limits.
 
     Returns:
-        str: The winner of the game, "Ben" ,"Maria" or None.
+        str: The winner of the game, "Ben", "Maria", or None.
     """
-    player = False
-    Ben = 0
-    Maria = 0
-    for num in nums:
-        numbers = [x for x in range(1, num + 1)]
-        # Create an array that saves the prime numbers
-        prime_number = SieveOfEratosthenes(num)
-        # Create a dictionary that maps every number to its multiples
-
-        def create_multiples_dict(n, max_multiple, exclude_list):
-            """
-            Create a dictionary that maps every number to its multiples,
-            excluding certain numbers.
-
-            Args:
-                n (int): The upper limit for generating multiples.
-                max_multiple (int): The maximum multiple to generate.
-                exclude_list (list): A list of numbers to exclude from the
-                multiples.
-
-            Returns:
-                dict: A dictionary where each key is a number and its value
-                is a list of multiples.
-            """
-            return {i: [j for j in range(i, max_multiple + 1, i) if
-                        j not in exclude_list]
-                    for i in range(2, n + 1)}
-        multiples = create_multiples_dict(num, num, prime_number)
-        # For each pick, filter the numbers array based on the multiples
-        # dictionary If there's a number that is a prime number, continue,
-        # else print the result
-
-        # Each turn, pick the first number in the array, then change the
-        # player value If the value is True: Ben wins, else Maria wins
-        current_number = 2
-        while len(numbers) > 1:
-            full_list = []
-            full_list.extend(numbers)
-            filter_list = list(multiples[current_number])
-            filtered_result = [item for item in full_list if
-                               item not in filter_list]
-            numbers.clear()
-            numbers.extend(filtered_result)
-            current_number += 1
-            player = not player
-
-        if player is True:
-            Ben += 1
-        else:
-            Maria += 1
-    if Ben > Maria:
-        return "Ben"
-    elif Maria > Ben:
-        return "Maria"
-    else:
+    if not nums or x < 1:
         return None
+
+    max_n = max(nums)
+    primes = SieveOfEratosthenes(max_n)
+
+    # Count the number of wins for each player
+    Maria_wins = 0
+    Ben_wins = 0
+
+    for n in nums:
+        # Simulate the game for the current number
+        remaining_numbers = set(range(1, n + 1))
+        current_player = 0  # 0: Maria, 1: Ben
+
+        for prime in primes:
+            if prime > n:
+                break
+
+            # Remove prime and its multiples
+            if prime in remaining_numbers:
+                multiples = set(range(prime, n + 1, prime))
+                remaining_numbers -= multiples
+                current_player = 1 - current_player
+
+        # Determine the winner of the round
+        if current_player == 1:  # Ben made the last move
+            Maria_wins += 1
+        else:
+            Ben_wins += 1
+
+    # Determine the overall winner
+    if Maria_wins > Ben_wins:
+        return "Maria"
+    elif Ben_wins > Maria_wins:
+        return "Ben"
+    return None
